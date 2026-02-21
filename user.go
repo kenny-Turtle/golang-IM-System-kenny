@@ -2,6 +2,7 @@ package main
 
 import (
 	"net"
+	"fmt"
 )
 
 type User struct {
@@ -32,9 +33,23 @@ func (this *User) Offline(){
 
 }
 
+func (this *User) SendMsg(msg string){
+	this.conn.Write([]byte(msg))
+}
+
 // 用户处理消息的业务
 func (this *User) DoMessage(msg string){
-    this.server.Broadcast(this, msg)
+	if msg == "who" {
+        // 查询当前都有哪些在线用户
+		this.server.mapLock.Lock()
+        for _, user := range this.server.OnlineMap{
+			onlineMsg := fmt.Sprintf("%s 在线\n", user.Name)
+			this.SendMsg(onlineMsg)
+		}
+		this.server.mapLock.Unlock()
+	}else {
+    	this.server.Broadcast(this, msg)
+	}
 }
 
 // 创建一个用户
