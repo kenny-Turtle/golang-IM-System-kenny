@@ -103,7 +103,7 @@ func (this *Server) Handle(conn net.Conn){
 			// 说明当前用户是活跃的，应重置定时器
 			// 不做任何事情，为了激活select，更新下面的定时器
 
-		case <- time.After(time.Second * 10):
+		case <- time.After(time.Second * 30):
 			// 已经超时
 			// 将当前的User强制地关闭下线
 
