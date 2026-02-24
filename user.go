@@ -88,7 +88,10 @@ func NewUser(conn net.Conn, server *Server) *User{
 // 监听当前User channel的方法， 一旦有消息，就发送给客户端
 func (this *User) ListenMessage(){
 	for msg := range this.C{
-		this.conn.Write([]byte(msg + "\n"))
+		_, err := this.conn.Write([]byte(msg + "\n"))
+		if err != nil{
+			fmt.Println("Send msg err:", err)
+		}
 	}
 
 }
